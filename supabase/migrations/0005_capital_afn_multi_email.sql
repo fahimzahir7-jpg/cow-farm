@@ -7,5 +7,4 @@ update public.capital_entries
 
 -- Several backup recipients
 alter table public.settings add column if not exists backup_emails text[] not null default '{}';
-update public.settings set backup_emails = array[backup_email] where backup_email is not null and backup_email <> '';
-alter table public.settings drop column if exists backup_email;
+-- (the old single backup_email column is left in place, unused)
