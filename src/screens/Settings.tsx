@@ -82,7 +82,7 @@ export default function Settings() {
         {demoMode ? (
           <>
             <p className="hint">{t('demo')}</p>
-            <button className="btn" onClick={() => confirm(t('resetDemo') + '?') && resetDemo()}>
+            <button className="btn" onClick={() => resetDemo()}>
               {t('resetDemo')}
             </button>
           </>

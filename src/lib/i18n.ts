@@ -160,6 +160,12 @@ const en = {
   resetDemo: 'Reset demo data',
   viewOnly: 'You can view records but not change them.',
   exportCsv: 'Download CSV',
+  profitTakeOut: 'Profit taken out',
+  takeOutProfit: 'Take out profit',
+  profitEarned: 'Profit earned',
+  takenOut: 'Taken out',
+  stillToTake: 'Still to take',
+  takeOutHelp: 'Since the start. Taking out profit does not change anyone\'s capital share.',
 } as const
 
 export type TKey = keyof typeof en
@@ -317,6 +323,12 @@ const ps: Dict = {
   resetDemo: 'ازمایښتي معلومات له سره',
   viewOnly: 'تاسو یوازې کتلی شئ، بدلون نشئ راوستلی.',
   exportCsv: 'CSV ښکته کول',
+  profitTakeOut: 'ایستل شوې ګټه',
+  takeOutProfit: 'ګټه ایستل',
+  profitEarned: 'ګټل شوې ګټه',
+  takenOut: 'ایستل شوې',
+  stillToTake: 'پاتې ګټه',
+  takeOutHelp: 'له پیله. د ګټې ایستل د چا د پانګې برخه نه بدلوي.',
 }
 
 // Dari (Afghan Persian)
@@ -471,6 +483,12 @@ const fa: Dict = {
   resetDemo: 'معلومات نمایشی از نو',
   viewOnly: 'شما فقط می‌توانید ببینید، تغییر داده نمی‌توانید.',
   exportCsv: 'دانلود CSV',
+  profitTakeOut: 'مفاد برداشت شده',
+  takeOutProfit: 'برداشت مفاد',
+  profitEarned: 'مفاد به دست آمده',
+  takenOut: 'برداشت شده',
+  stillToTake: 'باقی مفاد',
+  takeOutHelp: 'از شروع. برداشت مفاد سهم سرمایه کسی را تغییر نمی‌دهد.',
 }
 
 const dicts: Record<Lang, Dict> = { ps, fa, en }

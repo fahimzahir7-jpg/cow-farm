@@ -16,7 +16,7 @@ const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
 export const supabase: SupabaseClient | null = url && key ? createClient(url, key) : null
 export const demoMode = !supabase
 
-type Table = 'employees' | 'partners' | 'capital_entries' | 'animals' | 'milk_records' | 'milk_sales' | 'expenses' | 'settings'
+type Table = 'profit_withdrawals' | 'employees' | 'partners' | 'capital_entries' | 'animals' | 'milk_records' | 'milk_sales' | 'expenses' | 'settings'
 
 interface Op {
   opId: string
@@ -45,6 +45,7 @@ const DEFAULT_SETTINGS: Settings = {
 }
 
 const emptyData = (): FarmData => ({
+  profit_withdrawals: [],
   employees: [],
   partners: [],
   capital_entries: [],
@@ -207,7 +208,7 @@ async function flush() {
 }
 
 async function pull() {
-  const tables = ['employees', 'partners', 'capital_entries', 'animals', 'milk_records', 'milk_sales', 'expenses'] as const
+  const tables = ['profit_withdrawals', 'employees', 'partners', 'capital_entries', 'animals', 'milk_records', 'milk_sales', 'expenses'] as const
   const res = await Promise.all([
     ...tables.map((t) => fetchAll(t)),
     supabase!.from('settings').select('*').eq('id', 1).single(),
@@ -335,6 +336,9 @@ function demoSeed(): FarmData {
   d.settings = { ...DEFAULT_SETTINGS }
   const worker = { id: uid(), name: 'Gul Agha', job: 'Farm worker', monthly_salary_afn: 12000, start_date: '2026-09-01', active: true }
   d.employees = [worker]
+  d.profit_withdrawals = [
+    { id: uid(), partner_id: haji.id, withdrawal_date: '2026-11-05', amount_afn: 20000, note: 'Cash to Haji' },
+  ]
   d.capital_entries = [
     { id: uid(), partner_id: haji.id, entry_date: '2026-09-01', amount_usd: 12000, note: 'Initial investment' },
     { id: uid(), partner_id: ala.id, entry_date: '2026-09-01', amount_usd: 12000, note: 'Initial investment' },

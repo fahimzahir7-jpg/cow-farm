@@ -303,6 +303,7 @@ export function cashPosition(data: FarmData) {
   const purchases = data.animals.reduce((s, a) => s + Number(a.purchase_price_afn), 0)
   const expenses = data.expenses.reduce((s, e) => s + Number(e.amount_afn), 0)
   const capitalAfn = capitalUsd * rate
+  const withdrawn = (data.profit_withdrawals ?? []).reduce((s, w) => s + Number(w.amount_afn), 0)
   return {
     capitalUsd,
     capitalAfn,
@@ -311,6 +312,7 @@ export function cashPosition(data: FarmData) {
     sales,
     purchases,
     expenses,
-    cash: capitalAfn + milk + sales - purchases - expenses,
+    withdrawn,
+    cash: capitalAfn + milk + sales - purchases - expenses - withdrawn,
   }
 }

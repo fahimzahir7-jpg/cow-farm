@@ -649,3 +649,56 @@ main {
   margin-bottom: 16px;
   text-align: center;
 }
+
+.print-only {
+  display: none;
+}
+@media print {
+  :root,
+  :root[data-theme='dark'] {
+    --bg: #fff;
+    --surface: #fff;
+    --surface-2: #f3f3f0;
+    --text: #111;
+    --muted: #555;
+    --border: #ccc;
+    color-scheme: light;
+  }
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+  body {
+    background: #fff;
+  }
+  .topbar,
+  .tabbar,
+  .banner,
+  .segmented,
+  .no-print,
+  .card-head .btn,
+  .card .btn {
+    display: none !important;
+  }
+  .print-only {
+    display: block;
+  }
+  .print-head {
+    border-bottom: 2px solid #111;
+    padding-bottom: 6px;
+  }
+  .app {
+    max-width: none;
+    padding: 0;
+  }
+  main {
+    padding: 0;
+  }
+  .card {
+    break-inside: avoid;
+    border-color: #ccc;
+  }
+  .table-wrap {
+    overflow: visible;
+  }
+}

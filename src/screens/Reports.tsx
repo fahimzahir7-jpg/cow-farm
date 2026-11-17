@@ -3,12 +3,15 @@ import { addDays, buildReport, cashPosition, monthEnd, monthStart, today, type R
 import { fmtAfn, fmtNum, fmtUsd, useT } from '../lib/i18n'
 import { useStore } from '../lib/store'
 import { Card, Field, Stat, downloadCsv, go } from '../ui'
+import { downloadExcel } from '../lib/export'
+import Payouts, { partnerBalances } from './Payouts'
 
 type Preset = 'thisMonth' | 'lastMonth' | 'allTime' | 'custom'
 
 export default function Reports() {
   const { t } = useT()
   const data = useStore((s) => s.data)
+  const [busy, setBusy] = useState(false)
   const [preset, setPreset] = useState<Preset>('thisMonth')
   const firstDate = useMemo(() => {
     const ds = [...data.animals.map((a) => a.acquired_on), ...data.capital_entries.map((c) => c.entry_date), ...data.expenses.map((e) => e.period_start)]
@@ -69,9 +72,35 @@ export default function Reports() {
           </Field>
         </div>
       )}
-      <p className="hint">
-        {range.from} → {range.to}
-      </p>
+      <div className="print-only print-head">
+        <h1>🐄 {t('appName')}</h1>
+        <div>
+          {t('reports')}: {range.from} → {range.to} · {t('exchangeRate')}: {rate}
+        </div>
+      </div>
+      <div className="toolbar no-print">
+        <span className="hint">
+          {range.from} → {range.to}
+        </span>
+        <span className="grow" />
+        <button className="btn small" onClick={() => window.print()}>
+          ⤓ PDF
+        </button>
+        <button
+          className="btn small"
+          disabled={busy}
+          onClick={async () => {
+            setBusy(true)
+            try {
+              await downloadExcel(data, r, range, partnerBalances(data, firstDate), t)
+            } finally {
+              setBusy(false)
+            }
+          }}
+        >
+          ⤓ Excel
+        </button>
+      </div>
 
       <Card>
         <div className="stats">
@@ -179,6 +208,8 @@ export default function Reports() {
         </div>
       </Card>
 
+      <Payouts firstDate={firstDate} />
+
       <Card title={t('cash')}>
         <ul className="list compact">
           <li>
@@ -203,6 +234,12 @@ export default function Reports() {
             <span>− {t('totalExpenses')}</span>
             <b>{fmtAfn(cash.expenses)}</b>
           </li>
+          {cash.withdrawn > 0 && (
+            <li>
+              <span>− {t('takenOut')}</span>
+              <b>{fmtAfn(cash.withdrawn)}</b>
+            </li>
+          )}
           <li className="total">
             <span>{t('cash')}</span>
             <b>

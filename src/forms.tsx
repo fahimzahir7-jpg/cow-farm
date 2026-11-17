@@ -11,17 +11,12 @@ const NumInput = (p: { value: string; onChange: (v: string) => void; required?: 
 
 function Buttons({ onCancel, onDelete }: { onCancel: () => void; onDelete?: () => void }) {
   const { t } = useT()
+  const [sure, setSure] = useState(false)
   return (
     <div className="form-buttons">
       {onDelete && (
-        <button
-          type="button"
-          className="btn danger"
-          onClick={() => {
-            if (confirm(t('confirmDelete'))) onDelete()
-          }}
-        >
-          {t('delete')}
+        <button type="button" className="btn danger" onClick={() => (sure ? onDelete() : setSure(true))}>
+          {sure ? t('confirmDelete') : t('delete')}
         </button>
       )}
       <span className="grow" />

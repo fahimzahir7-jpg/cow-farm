@@ -103,7 +103,17 @@ export interface Employee {
   active: boolean
 }
 
+/** Profit paid out to a partner, in AFN. Does not change capital shares. */
+export interface ProfitWithdrawal {
+  id: string
+  partner_id: string
+  withdrawal_date: string
+  amount_afn: number
+  note: string | null
+}
+
 export interface FarmData {
+  profit_withdrawals: ProfitWithdrawal[]
   employees: Employee[]
   partners: Partner[]
   capital_entries: CapitalEntry[]
