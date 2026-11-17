@@ -26,6 +26,7 @@ export interface Settings {
   afn_per_usd: number
   calf_share: number
   rate_updated_at: string | null
+  backup_email?: string | null
 }
 
 export type AnimalKind = 'cow' | 'calf' | 'bull'

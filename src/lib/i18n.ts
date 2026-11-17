@@ -166,6 +166,8 @@ const en = {
   takenOut: 'Taken out',
   stillToTake: 'Still to take',
   takeOutHelp: 'Since the start. Taking out profit does not change anyone\'s capital share.',
+  backupEmail: 'Daily backup email',
+  backupEmailHint: 'An Excel file with all records is sent here every night (midnight Kabul time).',
 } as const
 
 export type TKey = keyof typeof en
@@ -329,6 +331,8 @@ const ps: Dict = {
   takenOut: 'ایستل شوې',
   stillToTake: 'پاتې ګټه',
   takeOutHelp: 'له پیله. د ګټې ایستل د چا د پانګې برخه نه بدلوي.',
+  backupEmail: 'د ورځني بیک اپ برېښنالیک',
+  backupEmailHint: 'د ټولو ریکارډونو Excel فایل هره شپه (د کابل د وخت نیمه شپه) دې ته لېږل کېږي.',
 }
 
 // Dari (Afghan Persian)
@@ -489,6 +493,8 @@ const fa: Dict = {
   takenOut: 'برداشت شده',
   stillToTake: 'باقی مفاد',
   takeOutHelp: 'از شروع. برداشت مفاد سهم سرمایه کسی را تغییر نمی‌دهد.',
+  backupEmail: 'ایمیل بک‌آپ روزانه',
+  backupEmailHint: 'فایل Excel همه ریکاردها هر شب (نیمه شب به وقت کابل) به این آدرس فرستاده می‌شود.',
 }
 
 const dicts: Record<Lang, Dict> = { ps, fa, en }

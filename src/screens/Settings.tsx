@@ -75,6 +75,17 @@ export default function Settings() {
         <button className="btn small" style={{ marginTop: -4, marginBottom: 12 }} onClick={() => void refreshRate(true)}>
           ⟳ {t('refreshRate')}
         </button>
+        {isAdmin && (
+          <Field label={t('backupEmail')} hint={t('backupEmailHint')}>
+            <input
+              id="backup-email"
+              type="email"
+              key={s.backup_email ?? ''}
+              defaultValue={s.backup_email ?? ''}
+              onBlur={(e) => e.target.value.trim() !== (s.backup_email ?? '') && saveSettings({ backup_email: e.target.value.trim() || null })}
+            />
+          </Field>
+        )}
         <NumSetting label={t('calfShare')} hint={t('calfShareHint')} value={s.calf_share} disabled={!isAdmin} onSave={(v) => v >= 0 && v <= 1 && saveSettings({ calf_share: v })} />
       </Card>
 
