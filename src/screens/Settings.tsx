@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { capitalAsOf, toDay, today } from '../lib/calc'
-import { LANGS, fmtUsd, setLang, useT } from '../lib/i18n'
+import { LANGS, fmtAfn, fmtUsd, setLang, useT } from '../lib/i18n'
 import { changePassword, demoMode, getState, logout, refreshRate, resetDemo, saveSettings, sync, useStore } from '../lib/store'
 import type { CapitalEntry } from '../lib/types'
 import { CapitalForm } from '../forms'
@@ -44,7 +44,8 @@ export default function Settings() {
           {data.partners.map((p) => (
             <div className="stat" key={p.id}>
               <div className="stat-label">{p.name}</div>
-              <div className="stat-value">{fmtUsd(cap.get(p.id) ?? 0)}</div>
+              <div className="stat-value">{fmtAfn(cap.get(p.id) ?? 0)}</div>
+              <div className="stat-sub">{fmtUsd((cap.get(p.id) ?? 0) / Number(s.afn_per_usd))}</div>
             </div>
           ))}
         </div>
@@ -57,7 +58,10 @@ export default function Settings() {
                   <span className="muted small">{c.entry_date}</span> {nameOf(c.partner_id)}
                 </span>
                 <span className="muted">{c.note}</span>
-                <b>{fmtUsd(Number(c.amount_usd))}</b>
+                <b>
+                  {fmtAfn(Number(c.amount_afn))}
+                  <div className="muted small">{fmtUsd(Number(c.amount_afn) / Number(s.afn_per_usd))}</div>
+                </b>
               </li>
             ))}
         </ul>
@@ -75,17 +79,7 @@ export default function Settings() {
         <button className="btn small" style={{ marginTop: -4, marginBottom: 12 }} onClick={() => void refreshRate(true)}>
           ⟳ {t('refreshRate')}
         </button>
-        {isAdmin && (
-          <Field label={t('backupEmail')} hint={t('backupEmailHint')}>
-            <input
-              id="backup-email"
-              type="email"
-              key={s.backup_email ?? ''}
-              defaultValue={s.backup_email ?? ''}
-              onBlur={(e) => e.target.value.trim() !== (s.backup_email ?? '') && saveSettings({ backup_email: e.target.value.trim() || null })}
-            />
-          </Field>
-        )}
+        {isAdmin && <BackupEmails emails={s.backup_emails ?? []} />}
         <NumSetting label={t('calfShare')} hint={t('calfShareHint')} value={s.calf_share} disabled={!isAdmin} onSave={(v) => v >= 0 && v <= 1 && saveSettings({ calf_share: v })} />
       </Card>
 
@@ -165,5 +159,52 @@ function ChangePassword() {
       </Field>
       <button className="btn">{t('save')}</button>
     </form>
+  )
+}
+
+function BackupEmails({ emails }: { emails: string[] }) {
+  const { t } = useT()
+  const [v, setV] = useState('')
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+  const add = () => {
+    const e = v.trim().toLowerCase()
+    if (!valid || emails.includes(e)) return
+    saveSettings({ backup_emails: [...emails, e] })
+    setV('')
+  }
+  return (
+    <Field label={t('backupEmail')} hint={t('backupEmailHint')}>
+      {emails.length > 0 && (
+        <div className="chips">
+          {emails.map((e) => (
+            <span key={e} className="chip on email-chip">
+              {e}
+              <button type="button" aria-label={t('delete')} onClick={() => saveSettings({ backup_emails: emails.filter((x) => x !== e) })}>
+                ✕
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="inline-add">
+        <input
+          id="backup-email-new"
+          type="email"
+          dir="ltr"
+          placeholder="name@example.com"
+          value={v}
+          onChange={(e) => setV(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              add()
+            }
+          }}
+        />
+        <button type="button" className="btn" disabled={!valid} onClick={add}>
+          + {t('add')}
+        </button>
+      </div>
+    </Field>
   )
 }

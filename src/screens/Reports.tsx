@@ -125,7 +125,10 @@ export default function Reports() {
             {r.partners.map((p) => (
               <tr key={p.partnerId}>
                 <td>{p.name}</td>
-                <td>{fmtUsd(p.capitalUsd)}</td>
+                <td>
+                  {fmtAfn(p.capitalAfn)}
+                  <div className="muted small">{usd(p.capitalAfn)}</div>
+                </td>
                 <td>{fmtNum(p.capitalPct, 1)}%</td>
                 <td className={p.profitAfn >= 0 ? 'pos' : 'neg'}>
                   {fmtAfn(p.profitAfn)}
@@ -215,7 +218,7 @@ export default function Reports() {
           <li>
             <span>{t('capital')}</span>
             <b>
-              {fmtUsd(cash.capitalUsd)} <span className="muted small">({fmtAfn(cash.capitalAfn)})</span>
+              {fmtAfn(cash.capitalAfn)} <span className="muted small">({fmtUsd(cash.capitalUsd)})</span>
             </b>
           </li>
           <li>

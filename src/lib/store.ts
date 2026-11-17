@@ -340,9 +340,9 @@ function demoSeed(): FarmData {
     { id: uid(), partner_id: haji.id, withdrawal_date: '2026-11-05', amount_afn: 20000, note: 'Cash to Haji' },
   ]
   d.capital_entries = [
-    { id: uid(), partner_id: haji.id, entry_date: '2026-09-01', amount_usd: 12000, note: 'Initial investment' },
-    { id: uid(), partner_id: ala.id, entry_date: '2026-09-01', amount_usd: 12000, note: 'Initial investment' },
-    { id: uid(), partner_id: haji.id, entry_date: '2026-10-15', amount_usd: 3000, note: 'Added capital' },
+    { id: uid(), partner_id: haji.id, entry_date: '2026-09-01', amount_afn: 840000, note: 'Initial investment' },
+    { id: uid(), partner_id: ala.id, entry_date: '2026-09-01', amount_afn: 840000, note: 'Initial investment' },
+    { id: uid(), partner_id: haji.id, entry_date: '2026-10-15', amount_afn: 210000, note: 'Added capital' },
   ]
   const cow = (tag: string, price: number, on: string, breed: string) => ({
     id: uid(),

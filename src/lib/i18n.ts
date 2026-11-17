@@ -166,7 +166,7 @@ const en = {
   takenOut: 'Taken out',
   stillToTake: 'Still to take',
   takeOutHelp: 'Since the start. Taking out profit does not change anyone\'s capital share.',
-  backupEmail: 'Daily backup email',
+  backupEmail: 'Daily backup emails',
   backupEmailHint: 'An Excel file with all records is sent here every night (midnight Kabul time).',
 } as const
 
@@ -279,7 +279,7 @@ const ps: Dict = {
   perDay: 'ورځ',
   net: 'تر اوسه پایله',
   netHelp: 'د شیدو ارزښت + د خرڅلاو بیه − د اخیستلو بیه − لګښتونه',
-  last30: 'د تېرو ۳۰ ورځو شیدې',
+  last30: 'د تېرو 30 ورځو شیدې',
   thisMonth: 'دا میاشت',
   lastMonth: 'تېره میاشت',
   allTime: 'له پیله',
@@ -317,7 +317,7 @@ const ps: Dict = {
   username: 'کارن نوم',
   password: 'پټ نوم',
   newPassword: 'نوی پټ نوم',
-  passwordTooShort: 'لږ تر لږه ۸ توري ولیکئ',
+  passwordTooShort: 'لږ تر لږه 8 توري ولیکئ',
   offline: 'انټرنېټ نشته. معلومات په همدې ټیلیفون کې خوندي شول او وروسته به پورته شي.',
   pending: 'د پورته کېدو په تمه',
   syncNow: 'اوس پورته کړه',
@@ -441,7 +441,7 @@ const fa: Dict = {
   perDay: 'روز',
   net: 'نتیجه تا حال',
   netHelp: 'ارزش شیر + قیمت فروش − قیمت خرید − مصارف',
-  last30: 'شیر ۳۰ روز گذشته',
+  last30: 'شیر 30 روز گذشته',
   thisMonth: 'این ماه',
   lastMonth: 'ماه گذشته',
   allTime: 'از شروع',
@@ -479,7 +479,7 @@ const fa: Dict = {
   username: 'نام کاربر',
   password: 'رمز',
   newPassword: 'رمز نو',
-  passwordTooShort: 'حداقل ۸ حرف بنویسید',
+  passwordTooShort: 'حداقل 8 حرف بنویسید',
   offline: 'انترنت نیست. معلومات در همین تیلفون ذخیره شد و بعداً آپلود می‌شود.',
   pending: 'منتظر آپلود',
   syncNow: 'حالا آپلود کن',
@@ -545,9 +545,9 @@ export function useT() {
   return { t, lang: l }
 }
 
-// Eastern Arabic-Indic digits for Pashto and Dari screens
+// Western digits (0-9) in every language, as the farm prefers
 export function fmtNum(n: number, digits = 0) {
-  return n.toLocaleString(isRtl(lang) ? 'fa-AF' : 'en-US', {
+  return n.toLocaleString('en-US', {
     maximumFractionDigits: digits,
     minimumFractionDigits: 0,
   })

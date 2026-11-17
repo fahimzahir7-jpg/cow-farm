@@ -49,7 +49,7 @@ export interface AnimalAccount {
 export interface PartnerShare {
   partnerId: string
   name: string
-  capitalUsd: number
+  capitalAfn: number
   capitalPct: number
   profitAfn: number
 }
@@ -250,7 +250,7 @@ export function capitalAsOf(data: FarmData, day: number) {
   const m = new Map<string, number>()
   for (const p of data.partners) m.set(p.id, 0)
   for (const c of data.capital_entries) {
-    if (toDay(c.entry_date) <= day) m.set(c.partner_id, (m.get(c.partner_id) ?? 0) + Number(c.amount_usd))
+    if (toDay(c.entry_date) <= day) m.set(c.partner_id, (m.get(c.partner_id) ?? 0) + Number(c.amount_afn))
   }
   return m
 }
@@ -258,7 +258,7 @@ export function capitalAsOf(data: FarmData, day: number) {
 function splitProfit(data: FarmData, from: number, daily: Float64Array): PartnerShare[] {
   const out = new Map<string, PartnerShare>()
   for (const p of data.partners) {
-    out.set(p.id, { partnerId: p.id, name: p.name, capitalUsd: 0, capitalPct: 0, profitAfn: 0 })
+    out.set(p.id, { partnerId: p.id, name: p.name, capitalAfn: 0, capitalPct: 0, profitAfn: 0 })
   }
 
   // Capital changes rarely, so walk day by day but recompute only when needed.
@@ -287,8 +287,8 @@ function splitProfit(data: FarmData, from: number, daily: Float64Array): Partner
   const capEnd = capitalAsOf(data, end)
   const capEndTotal = [...capEnd.values()].reduce((s, v) => s + v, 0)
   for (const row of out.values()) {
-    row.capitalUsd = capEnd.get(row.partnerId) ?? 0
-    row.capitalPct = capEndTotal ? (row.capitalUsd / capEndTotal) * 100 : 0
+    row.capitalAfn = capEnd.get(row.partnerId) ?? 0
+    row.capitalPct = capEndTotal ? (row.capitalAfn / capEndTotal) * 100 : 0
   }
   return [...out.values()]
 }
@@ -296,13 +296,13 @@ function splitProfit(data: FarmData, from: number, daily: Float64Array): Partner
 /** Overall cash position since the start, in AFN. Capital converted at the current rate. */
 export function cashPosition(data: FarmData) {
   const rate = Number(data.settings.afn_per_usd)
-  const capitalUsd = data.capital_entries.reduce((s, c) => s + Number(c.amount_usd), 0)
+  const capitalAfn = data.capital_entries.reduce((s, c) => s + Number(c.amount_afn), 0)
   const milk = data.milk_sales.filter((s) => s.paid).reduce((s, x) => s + Number(x.kg) * Number(x.price_per_kg_afn), 0)
   const unpaid = data.milk_sales.filter((s) => !s.paid).reduce((s, x) => s + Number(x.kg) * Number(x.price_per_kg_afn), 0)
   const sales = data.animals.reduce((s, a) => s + (a.status === 'sold' ? Number(a.sale_price_afn ?? 0) : 0), 0)
   const purchases = data.animals.reduce((s, a) => s + Number(a.purchase_price_afn), 0)
   const expenses = data.expenses.reduce((s, e) => s + Number(e.amount_afn), 0)
-  const capitalAfn = capitalUsd * rate
+  const capitalUsd = capitalAfn / rate
   const withdrawn = (data.profit_withdrawals ?? []).reduce((s, w) => s + Number(w.amount_afn), 0)
   return {
     capitalUsd,

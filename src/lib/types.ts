@@ -17,7 +17,7 @@ export interface CapitalEntry {
   id: string
   partner_id: string
   entry_date: string
-  amount_usd: number
+  amount_afn: number
   note: string | null
 }
 
@@ -26,7 +26,7 @@ export interface Settings {
   afn_per_usd: number
   calf_share: number
   rate_updated_at: string | null
-  backup_email?: string | null
+  backup_emails?: string[]
 }
 
 export type AnimalKind = 'cow' | 'calf' | 'bull'

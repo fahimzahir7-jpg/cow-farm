@@ -1,6 +1,6 @@
 // Daily backup: exports every table to an Excel workbook and emails it.
 // Called once a day by pg_cron (see supabase/migrations/0003_daily_backup.sql).
-// Needs the RESEND_API_KEY secret; the recipient is settings.backup_email in the app.
+// Needs the RESEND_API_KEY secret; recipients are settings.backup_emails in the app.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4'
 import * as XLSX from 'npm:xlsx@0.18.5'
 
@@ -25,9 +25,9 @@ Deno.serve(async (req) => {
   const key = Deno.env.get('RESEND_API_KEY')
   if (!key) return new Response('RESEND_API_KEY not set', { status: 500 })
 
-  const { data: settings } = await db.from('settings').select('backup_email').eq('id', 1).single()
-  const to = settings?.backup_email
-  if (!to) return new Response('no backup_email set', { status: 400 })
+  const { data: settings } = await db.from('settings').select('backup_emails').eq('id', 1).single()
+  const to: string[] = settings?.backup_emails ?? []
+  if (!to.length) return new Response('no backup_emails set', { status: 400 })
 
   const wb = XLSX.utils.book_new()
   const counts: string[] = []
@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: 'Cow Farm Backup <onboarding@resend.dev>',
-      to: [to],
+      to,
       subject: `Cow farm backup ${date}`,
       text: `Daily backup of all cow farm records (${date}).\n\n${counts.join('\n')}\n\nThe attached Excel file holds every table.`,
       attachments: [{ filename: `cow-farm-backup-${date}.xlsx`, content: file }],

@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { addDays, monthEnd, today } from './lib/calc'
-import { useT } from './lib/i18n'
+import { fmtUsd, useT } from './lib/i18n'
 import { remove, save, uid, useStore } from './lib/store'
 import { EXPENSE_CATEGORIES, type Animal, type CapitalEntry, type Employee, type Expense, type ExpenseCategory, type MilkSale } from './lib/types'
 import { Field, Sheet, num } from './ui'
@@ -434,11 +434,12 @@ export function ExitForm({ animal, mode, onClose }: { animal: Animal; mode: 'sol
 // ---------------- capital ----------------
 export function CapitalForm({ entry, onClose }: { entry?: CapitalEntry; onClose: () => void }) {
   const { t } = useT()
+  const rate = useStore((s) => Number(s.data.settings.afn_per_usd))
   const partners = useStore((s) => s.data.partners)
   const [f, setF] = useState({
     partner_id: entry?.partner_id ?? partners[0]?.id ?? '',
     entry_date: entry?.entry_date ?? today(),
-    amount: entry ? String(entry.amount_usd) : '',
+    amount: entry ? String(entry.amount_afn) : '',
     note: entry?.note ?? '',
   })
   const submit = (e: FormEvent) => {
@@ -449,7 +450,7 @@ export function CapitalForm({ entry, onClose }: { entry?: CapitalEntry; onClose:
       id: entry?.id ?? uid(),
       partner_id: f.partner_id,
       entry_date: f.entry_date,
-      amount_usd: amount,
+      amount_afn: amount,
       note: f.note || null,
     })
     onClose()
@@ -470,7 +471,7 @@ export function CapitalForm({ entry, onClose }: { entry?: CapitalEntry; onClose:
           <Field label={t('date')}>
             <input type="date" value={f.entry_date} required onChange={(e) => setF({ ...f, entry_date: e.target.value })} />
           </Field>
-          <Field label={t('amountUsd')} hint={t('withdrawalHint')}>
+          <Field label={t('amountAfn')} hint={Number.isFinite(num(f.amount)) ? `≈ ${fmtUsd(num(f.amount) / rate)} · ${t('withdrawalHint')}` : t('withdrawalHint')}>
             <NumInput value={f.amount} required autoFocus onChange={(v) => setF({ ...f, amount: v })} />
           </Field>
         </div>

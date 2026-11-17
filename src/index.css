@@ -702,3 +702,24 @@ main {
     overflow: visible;
   }
 }
+
+.email-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  direction: ltr;
+}
+.email-chip button {
+  border: 0;
+  background: none;
+  color: inherit;
+  padding: 0 2px;
+}
+.inline-add {
+  display: flex;
+  gap: 8px;
+}
+.inline-add input {
+  flex: 1;
+  min-width: 0;
+}

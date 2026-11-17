@@ -28,8 +28,8 @@ export async function downloadExcel(data: FarmData, r: Report, range: Range, bal
   ]
 
   const partners: Row[] = [
-    [t('partner'), `${t('capital')} (USD)`, `${t('share')} %`, `${t('profitShare')} (AFN)`],
-    ...r.partners.map((p) => [p.name, p.capitalUsd, Number(p.capitalPct.toFixed(2)), round(p.profitAfn)]),
+    [t('partner'), `${t('capital')} (AFN)`, `${t('capital')} (USD)`, `${t('share')} %`, `${t('profitShare')} (AFN)`],
+    ...r.partners.map((p) => [p.name, round(p.capitalAfn), round(p.capitalAfn / rate), Number(p.capitalPct.toFixed(2)), round(p.profitAfn)]),
     [],
     [t('partner'), t('profitEarned'), t('takenOut'), t('stillToTake')],
     ...balances.map((b) => [b.name, round(b.earned), round(b.taken), round(b.remaining)]),
@@ -91,8 +91,8 @@ export async function downloadExcel(data: FarmData, r: Report, range: Range, bal
   ]
 
   const capital: Row[] = [
-    [t('date'), t('partner'), t('amountUsd'), t('note')],
-    ...[...data.capital_entries].sort((a, b) => a.entry_date.localeCompare(b.entry_date)).map((c) => [c.entry_date, nameOf(c.partner_id), Number(c.amount_usd), c.note]),
+    [t('date'), t('partner'), t('amountAfn'), 'USD', t('note')],
+    ...[...data.capital_entries].sort((a, b) => a.entry_date.localeCompare(b.entry_date)).map((c) => [c.entry_date, nameOf(c.partner_id), Number(c.amount_afn), round(Number(c.amount_afn) / rate), c.note]),
   ]
 
   const wb = XLSX.utils.book_new()
